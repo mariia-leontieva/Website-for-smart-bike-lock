@@ -12,7 +12,7 @@
               <h5 class="mb-1" style="position: absolute; top: 80px; text-align: center; width: 100%;">Add a new Device!</h5>
               <div class="d-flex flex-column justify-content-center align-items-center" style="height: 100%; width: 100%;">
                 <div class="mb-3">
-                    <input type="text" id="deviceName" class="form-control" style="position: absolute; top: 200px; left: 50%; transform: translateX(-50%); width: 400px;" placeholder="Enter device ID" 
+                    <input type="text" id="deviceID" class="form-control" style="position: absolute; top: 200px; left: 50%; transform: translateX(-50%); width: 400px;" placeholder="Enter device ID" 
                            pattern="[A-Za-z0-9]+" title="Only letters and numbers are allowed" required>
                 </div>
                 <div>
@@ -75,17 +75,46 @@
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
     <script>
-        document.querySelector('.btn-warning').addEventListener('click', function() {
-            var input = document.getElementById('deviceName').value;
+        {% comment %} document.querySelector('.btn-warning').addEventListener('click', function() {
+            var input = document.getElementById('deviceID').value;
             if (input === 'ejfiw34') {
                 var successModal = new bootstrap.Modal(document.getElementById('successModal'));
                 successModal.show();
             } else {
               var FailModal = new bootstrap.Modal(document.getElementById('FailModal'));
               FailModal.show();
-              {% comment %} alert('Incorrect Device ID.'); {% endcomment %}
+              {% comment %} alert('Incorrect Device ID.'); 
             }
-        });
+        });  {% endcomment %}
+
+        document.querySelector('.btn-warning').addEventListener('click', function() {
+          var deviceID = document.getElementById('deviceID').value;
+
+          // 检查 deviceID 是否符合特定条件
+          if (deviceID === 'ejfiw34') {
+              // 显示成功模态框
+              var successModal = new bootstrap.Modal(document.getElementById('successModal'));
+              successModal.show();
+
+              // 发送 deviceID 到 ESP32
+              fetch('http://10.0.175.67/receive_device_id', {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({ id: deviceID })
+              })
+              .then(response => response.json())
+              .then(data => console.log(data))  // 处理ESP32的响应
+              .catch(error => console.error('Error:', error));
+
+          } else {
+              // 显示失败模态框
+              var FailModal = new bootstrap.Modal(document.getElementById('FailModal'));
+              FailModal.show();
+          }
+      });
+      
     </script>
   <script>
     var ctx = document.getElementById("chart-bars").getContext("2d");

@@ -31,30 +31,3 @@ def send_message_to_esp32(request):
         except requests.exceptions.RequestException as e:
             return JsonResponse({'status': 'error', 'message': str(e)})
     return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
-
-'''
-def geocode_address(request):
-    address = request.GET.get('address')
-    if not address:
-        return JsonResponse({'error': 'No address provided'}, status=400)
-
-    # address = urllib.parse.quote(address)
-    # api_key = settings.GOOGLE_MAPS_API_KEY
-    # url = f'https://maps.googleapis.com/maps/api/geocode/json?address={address}&key={api_key}'
-    
-    address = "No. 85, Section 3, Keelung Rd, Da’an District, Taipei City, 107"
-    encoded_address = urllib.parse.quote(address)
-    url = f"/geocode/?address={encoded_address}"
-
-    
-    response = requests.get(url)
-    data = response.json()
-    print(data)
-
-    if data['status'] == 'OK':
-        # 提取經緯度
-        location = data['results'][0]['geometry']['location']
-        return JsonResponse(location)
-    else:
-        return JsonResponse({'error': 'Failed to geocode address'}, status=400)
-'''
