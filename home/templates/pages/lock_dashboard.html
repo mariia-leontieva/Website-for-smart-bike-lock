@@ -101,6 +101,66 @@
                     <p class="mb-1 pt-2 text-bold">Your bicycle is now at...</p>
                     <h5 class="font-weight-bolder">太子學舍長興舍區</h5>
                     <p class="mb-5">106台北市大安區基隆路三段75號</p>
+                    {% comment %} <form id="geocode-form">
+                      <input type="text" id="address" placeholder="Enter an address" required>
+                      <button class="btn btn-secondary mt-auto" type="submit">Geocode</button>
+                  </form>
+                  
+                  <div id="result"></div>
+                  
+                  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                  <script>
+                      $('#geocode-form').on('submit', function(event) {
+                          event.preventDefault();
+                          var address = $('#address').val();
+                          $.ajax({
+                              url: '{% url "geocode_address" %}',
+                              data: {'address': address},
+                              success: function(data) {
+                                  $('#result').html('Latitude: ' + data.lat + '<br>Longitude: ' + data.lng);
+                              },
+                              error: function() {
+                                  $('#result').html('Error geocoding address');
+                              }
+                          });
+                      });
+                  </script> {% endcomment %}
+
+                  <form id="messageForm" method="post" action="{% url 'send_message_to_esp32' %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                      <input type="text" name="message" placeholder="Enter your message" required class="form-control">
+                  </div>
+                  <a class="btn btn-secondary mt-auto" href="javascript:;">
+                    Navigate to your bike
+                    <i class="fas fa-arrow-right text-sm ms-1" aria-hidden="true"></i>
+                </a>
+                    <button type="submit">Send Message</button>
+                </form>
+                
+                <script>
+                    document.getElementById('messageForm').onsubmit = function(e) {
+                        e.preventDefault(); // Prevent the default form submission
+                        let formData = new FormData(this);
+                
+                        fetch("{% url 'send_message_to_esp32' %}", {
+                            method: 'POST',
+                            body: formData,
+                            headers: {
+                                'X-CSRFToken': '{{ csrf_token }}'
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            alert(data.message);
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
+                    };
+                </script>
+                
+                  
                     <a class="btn btn-secondary mt-auto" href="javascript:;">
                       Navigate to your bike
                       <i class="fas fa-arrow-right text-sm ms-1" aria-hidden="true"></i>
@@ -119,6 +179,7 @@
                       <!-- End Google Maps Embed Code -->
                     </div>
                   </div>
+                  
                 </div>
               </div>
             </div>

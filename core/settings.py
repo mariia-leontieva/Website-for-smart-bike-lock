@@ -150,8 +150,9 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-## Char
+## Charlotte
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+GOOGLE_MAPS_API_KEY = os.getenv('AIzaSyA1B5DyQ45NNCUMh8Y7lnzdJt7DKMmvSnE')
 
 
 #if not DEBUG:
